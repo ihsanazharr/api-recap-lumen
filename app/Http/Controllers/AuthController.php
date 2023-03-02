@@ -17,7 +17,6 @@ class AuthController extends Controller
             'telp' => 'required| unique:users',
             'alamat' => 'required',
             'status' => 'required',
-            'image',
         ]);
 
         $data = [
@@ -26,7 +25,7 @@ class AuthController extends Controller
             'password' => $request->input('password'),
             'telp' => $request->input('telp'),
             'alamat' => $request->input('alamat'),
-            'status' => $request->input('status'),
+            'status' => $request->input('status')
         ];
 
         $user =  User::create(array_merge($request->all(),[
@@ -48,6 +47,7 @@ class AuthController extends Controller
         return response()->json($result, 200);
     }
 
+    
     public function login(Request $request)
     {
         $email = $request->input('email');
@@ -73,6 +73,7 @@ class AuthController extends Controller
         return $this->error("Email atau Password anda salah");
     }
 
+
     public function success($data, $message = "Login Berhasil"){
         return response()->json([
             'code' => 200,
@@ -87,10 +88,5 @@ class AuthController extends Controller
             'message' => $message
         ], 400);
 
-        // return response()->json([
-        //     'ok' => false,
-        //     'error_code' => 400,
-        //     'description' => $message
-        // ], 400);
     }
 }

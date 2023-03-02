@@ -38,6 +38,38 @@ class UserController extends Controller
         //
     }
 
+    public function upload(Request $request, $id)
+    {
+        $this->validate($request, [
+            'image' => 'required'
+        ]);
+
+        $image = $request->file('image')->getClientOriginalName();
+        $request->file('image')->move('upload', $image);
+
+        $data = [
+            'image' => url('upload/' . $image)
+        ];
+
+        $user = User::where('id', $id)->update($data);
+
+        if($user){
+            $result = [
+                'pesan' => 'Data Berhasil Ditambahkan',
+                'data' => $data
+            ];
+        }else{
+            $result = [
+                'pesan' => 'Data Tidak Bisa Ditambahkan',
+                'data' => ''
+            ];
+        }
+
+        return response()->json($result, 200);
+
+    
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -61,15 +93,7 @@ class UserController extends Controller
         return User::where("nama", "like", "%".$nama."%")->get();
     }
 
-    public function successAdd($data, $message = "Data Berhasil Ditambah")
-    {
-        return response()->json([
-            'code' => 200,
-            'message' => $message,
-            'data' => $data
-        ]);
-    }
-
+    
     public function successShow($data)
     {
         return response()->json([

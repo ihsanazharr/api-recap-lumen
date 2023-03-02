@@ -46,6 +46,10 @@ $router->group( ['prefix' => 'api'] , function() use($router) {
 
     $router->delete('user/{id}', ['uses' =>'UserController@destroy']);
 
+    $router->post('upload-user/{id}', ['uses'=>'UserController@upload']);
+
+
+
 
     //Pekerjaan
     $router->get('pekerjaan', ['uses' => 'PekerjaanController@index']);
