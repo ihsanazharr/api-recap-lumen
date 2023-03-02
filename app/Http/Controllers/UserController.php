@@ -93,7 +93,7 @@ class UserController extends Controller
         return User::where("nama", "like", "%".$nama."%")->get();
     }
 
-    
+
     public function successShow($data)
     {
         return response()->json([

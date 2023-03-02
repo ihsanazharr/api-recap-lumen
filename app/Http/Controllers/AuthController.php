@@ -47,7 +47,7 @@ class AuthController extends Controller
         return response()->json($result, 200);
     }
 
-    
+
     public function login(Request $request)
     {
         $email = $request->input('email');
