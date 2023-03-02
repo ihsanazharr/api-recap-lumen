@@ -47,9 +47,9 @@ class PekerjaanController extends Controller
     }
 
 
-    public function show($id)
+    public function show($idUser)
     {
-        $data = Pekerjaan::where('id',$id)->get();
+        $data = Pekerjaan::where('id_user',$idUser)->get();
         
         if($data){
             return $this->successShow($data);
