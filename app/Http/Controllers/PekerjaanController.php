@@ -20,6 +20,8 @@ class PekerjaanController extends Controller
         $this->validate($request, [
             'id_user' => 'required',
             'bulan' => 'required',
+            'start' => 'required',
+            'end' => 'required',
             'jam_toleransi' => 'required| numeric',
             'total_jam' => 'required| numeric'
         ]);
@@ -27,6 +29,8 @@ class PekerjaanController extends Controller
         $data = [
             'id_user' => $request->input('id_user'),
             'bulan' => $request->input('bulan'),
+            'start' => $request->input('start'),
+            'end' => $request->input('end'),
             'jam_toleransi' => $request->input('jam_toleransi'),
             'total_jam' => $request->input('total_jam')
         ];

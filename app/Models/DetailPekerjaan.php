@@ -10,7 +10,7 @@ class DetailPekerjaan extends Model
 {
     use HasFactory;
 
-    protected $table = 'detail_pekerjaans';
+    protected $table = 'detail_pekerjaan';
 
     public function pekerjaan() : BelongsTo
     {

@@ -13,10 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('pekerjaans', function (Blueprint $table) {
+        Schema::create('pekerjaan', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_user')->nullable();
             $table->enum('bulan', ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->integer('jam_toleransi');
             $table->integer('total_jam');
             $table->timestamps();
@@ -34,6 +36,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pekerjaans');
+        Schema::dropIfExists('pekerjaan');
     }
 };

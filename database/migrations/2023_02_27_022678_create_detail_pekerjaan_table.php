@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('detail_pekerjaans', function (Blueprint $table) {
+        Schema::create('detail_pekerjaan', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_pekerjaan')->nullable();
             $table->string('nama_pekerjaan');
@@ -23,7 +23,7 @@ return new class extends Migration
             $table->enum('tipe',['Progress Weekday', 'Lembur Weekday', 'Lembur Weekend']);
             $table->timestamps();
 
-            $table->foreign('id_pekerjaan')->references('id')->on('pekerjaans');
+            $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan');
         });
     }
 
@@ -34,6 +34,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('detail_pekerjaans');
+        Schema::dropIfExists('detail_pekerjaan');
     }
 };

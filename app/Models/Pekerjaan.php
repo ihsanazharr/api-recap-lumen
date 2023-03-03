@@ -10,7 +10,7 @@ class Pekerjaan extends Model
 {
     use HasFactory;
 
-    protected $table = 'pekerjaans';
+    protected $table = 'pekerjaan';
 
 
     public function user() : BelongsTo
@@ -19,6 +19,6 @@ class Pekerjaan extends Model
     }
 
     protected $fillable = [
-        'id_user', 'bulan', 'jam_toleransi', 'total_jam'
+        'id_user', 'bulan', 'start', 'end', 'jam_toleransi', 'total_jam'
     ];
 }
