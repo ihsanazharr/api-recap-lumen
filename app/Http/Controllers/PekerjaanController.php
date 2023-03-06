@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
 
 class PekerjaanController extends Controller
 {
 
+    
     public function index()
     {
         $data = Pekerjaan::all();
@@ -53,6 +55,9 @@ class PekerjaanController extends Controller
 
     public function show($idUser)
     {
+        // $currentTime = Carbon::now();
+        // // `dd($currentTime)`;
+        // $currentTime->toDateTimeString();
         $data = Pekerjaan::where('id_user',$idUser)->get();
         
         if($data){

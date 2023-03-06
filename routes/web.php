@@ -32,6 +32,7 @@ $router->group( ['prefix' => 'api'] , function() use($router) {
 
     //User
     $router->get('user', ['uses' => 'UserController@index'] );
+    $router->get('user/{id}', ['uses' => 'UserController@show']);
     $router->get('search-user/{nama}', ['uses' => 'UserController@search']);
     $router->put('user/{id}', ['uses' => 'UserController@update']);
     $router->delete('user/{id}', ['uses' =>'UserController@destroy']);

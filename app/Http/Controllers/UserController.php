@@ -73,19 +73,28 @@ class UserController extends Controller
 
     public function update(Request $request, $id)
     {
-        $user = User::where('id', $id)->update($request->all());
+        $this->validate($request, [
+            'nama' => 'unique:users',
+            'email' => 'unique:users',
+            'password' => 'min:8',
+            'telp' => 'unique:users'
+        ]);
+        $user = User::where('id', $id)->update(array_merge($request->all(),[
+            'password' => bcrypt($request->password)
+        ]));
 
         if($user){
-            return $this->successEdit($user);
+            return $this->successEdit($request->$user);
         }else{
             return $this->error('Gagal merubah data');
         }
     }
 
  
-    public function destroy(User $user)
+    public function destroy($id)
     {
-        return response()->json("Berhasil menghapus $user");
+        User::where('id', $id)->delete();
+        return response()->json("Berhasil menghapus $id");
     }
 
     public function search($nama)
@@ -107,7 +116,6 @@ class UserController extends Controller
         return response()->json([
             'code' => 200,
             'message' => $message,
-            'data' => $data
         ]);
     }
 
