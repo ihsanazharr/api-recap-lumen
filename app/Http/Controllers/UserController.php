@@ -48,15 +48,16 @@ class UserController extends Controller
         $request->file('image')->move('upload', $image);
 
         $data = [
-            'image' => url('upload/' . $image)
+            'image' => url('upload/' . $image),
         ];
 
         $user = User::where('id', $id)->update($data);
+        
 
-        if($user){
+        if($user = User::where('id', $request->id)->firstOrFail()){
             $result = [
                 'pesan' => 'Data Berhasil Ditambahkan',
-                'data' => $data
+                'data' => $user
             ];
         }else{
             $result = [
@@ -84,7 +85,7 @@ class UserController extends Controller
         ]));
 
         if($user){
-            return $this->successEdit($request->$user);
+            return $this->successEdit("Data berhasil diubah");
         }else{
             return $this->error('Gagal merubah data');
         }
@@ -93,8 +94,8 @@ class UserController extends Controller
  
     public function destroy($id)
     {
-        User::where('id', $id)->delete();
-        return response()->json("Berhasil menghapus $id");
+        $delete = User::where('id', $id)->delete();
+        return response()->json("Berhasil menghapus $delete");
     }
 
     public function search($nama)
@@ -111,7 +112,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function successEdit($data, $message = "Data Berhasil Dirubah")
+    public function successEdit($message = "Data Berhasil Dirubah")
     {
         return response()->json([
             'code' => 200,

@@ -34,7 +34,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         'telp',
         'alamat',
         'status',
-        'image'
+        'image',
+        'api_token'
     ];
 
     /**
