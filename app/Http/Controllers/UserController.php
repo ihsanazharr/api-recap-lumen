@@ -54,7 +54,9 @@ class UserController extends Controller
         $user = User::where('id', $id)->update($data);
         
 
-        if($user = User::where('id', $request->id)->firstOrFail()){
+        if(User::where('id', $request->id)->firstOrFail()){
+            $user = User::where('id', $id)->first();
+            
             $result = [
                 'pesan' => 'Data Berhasil Ditambahkan',
                 'data' => $user
@@ -62,7 +64,7 @@ class UserController extends Controller
         }else{
             $result = [
                 'pesan' => 'Data Tidak Bisa Ditambahkan',
-                'data' => ''
+                'data' => []
             ];
         }
 

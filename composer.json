@@ -8,8 +8,9 @@
         "php": "^8.0",
         "firebase/php-jwt": "^6.4",
         "flipbox/lumen-generator": "^9.1",
-        "laravel/lumen-framework": "^9.0",
-        "php-open-source-saver/jwt-auth": "1.4.2"
+        "laravel/lumen-framework": "^9.1.6",
+        "php-open-source-saver/jwt-auth": "1.4.2",
+        "tymon/jwt-auth": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

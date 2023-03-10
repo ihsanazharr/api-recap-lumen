@@ -98,9 +98,10 @@ class AuthController extends Controller
         //     'exp' => intval(microtime(true)) + (60 * 60 * 1000),
         //     'uid' => $user->id
         // ];
-        // $token = JWT::encode(['HS256'],$payload, env('JWT_SECRET'));
+        // $token = JWT::encode($payload, env('JWT_SECRET'));
         // return response()->json(['api_token' => $token]);
-        
+
+
         $email = $request->input('email');
         $password = $request->input('password');
 

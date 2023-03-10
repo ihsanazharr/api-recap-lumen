@@ -21,5 +21,4 @@ class DetailPekerjaan extends Model
         'id_pekerjaan', 'nama_pekerjaan', 'desc_pekerjaan', 'jam_kerja', 'tgl_kerja', 'tipe'
     ];
 
-
 }

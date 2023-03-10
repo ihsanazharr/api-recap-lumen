@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use App\Models\User;
 use Illuminate\Contracts\Auth\Factory as Auth;
 
 class Authenticate
@@ -34,8 +35,16 @@ class Authenticate
      * @return mixed
      */
     public function handle($request, Closure $next, $guard = null)
-    {
-        if ($this->auth->guard($guard)->guest()) {
+        {
+    //     if ($this->auth->guard($guard)->guest()) {
+    //         return response('Anda Tidak Memiliki Otoritas.', 401);
+    //     }
+        if ($request->header('authorization')) {
+            $data =  User::where('api_token', $request->header('authorization'))->first();
+            if($data == null){
+                return response('Anda Tidak Memiliki Otoritas.', 401);
+            }
+        } else {
             return response('Anda Tidak Memiliki Otoritas.', 401);
         }
 
