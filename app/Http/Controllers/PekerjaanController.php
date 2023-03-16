@@ -4,16 +4,24 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Pekerjaan;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class PekerjaanController extends Controller
 {
 
     
-    public function index()
+    public function index(Request $request)
     {
         $data = Pekerjaan::all();
-        return response()->json($data);
+        $user = User::where('email', $request->email)->first();
+        $token = $user->$request('api_token');
+        return response()->json([
+            'code' => 200,
+            'message' => 'data berhasil ditambah',
+            'token' => $token,
+            'data'=> $data
+        ]);
     }
 
 
@@ -38,9 +46,14 @@ class PekerjaanController extends Controller
         ];
 
         $pekerjaan = Pekerjaan::create($data);
-
         if($pekerjaan){
-            return $this->successAdd($pekerjaan);
+            $token = User::where('api_token', $request->api_token);
+            return response()->json([
+                'code' => 200,
+                'message' => 'data berhasil ditambah',
+                'token' => $token,
+                'data'=> $pekerjaan
+            ]);
         }else{
             return $this->error("Gagal Menambahkan Data");
         }

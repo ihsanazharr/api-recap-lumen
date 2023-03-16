@@ -31,7 +31,6 @@ $router->post('login', 'AuthController@login');
 
 $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($router) {
 
-    
     //Role
     $router->get('role', 'RoleController@index');
     $router->get('role/{id}','RoleController@show');
@@ -47,7 +46,6 @@ $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($ro
     $router->delete('user/{id}', 'UserController@destroy');
     $router->post('upload-user/{id}', 'UserController@upload');
 
-
     //Pekerjaan
     $router->get('pekerjaan',  'PekerjaanController@index');
     $router->get('pekerjaan/{idUser}',  'PekerjaanController@show');
@@ -55,7 +53,6 @@ $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($ro
     $router->post('pekerjaan',  'PekerjaanController@create');
     $router->put('pekerjaan/{id}',  'PekerjaanController@update');
     $router->delete('pekerjaan/{id}',  'PekerjaanController@destroy');
-
 
     //Detail Pekerjaan
     $router->get('detailpk',  'DetailPekerjaanController@index');

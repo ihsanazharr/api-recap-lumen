@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('detail_pekerjaan', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('id_user')->nullable();
             $table->unsignedBigInteger('id_pekerjaan')->nullable();
             $table->string('nama_pekerjaan');
             $table->string('desc_pekerjaan');
@@ -23,6 +24,7 @@ return new class extends Migration
             $table->enum('tipe',['Progress Weekday', 'Lembur Weekday', 'Lembur Weekend']);
             $table->timestamps();
 
+            $table->foreign('id_user')->references('id')->on('users');
             $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan');
         });
     }

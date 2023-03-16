@@ -53,23 +53,39 @@ class AuthController extends Controller
             'status' => 'required',
         ]);
 
-        $data = [
-            'nama' => $request->input('nama'),
-            'email' => $request->input('email'),
-            'password' => $request->input('password'),
-            'telp' => $request->input('telp'),
-            'alamat' => $request->input('alamat'),
-            'status' => $request->input('status')
-        ];
+        $nama = $request->input('nama');
+        $email = $request->input('email');
+        $password = Hash::make($request->input('password'));
+        $telp = $request->input('telp');
+        $alamat = $request->input('alamat');
+        $status = $request->input('status');
 
-        $user =  User::create(array_merge($request->all(),[
-            'password' => bcrypt($request->password)
-        ]));
+        $register = User::create([
+            'nama' => $nama,
+            'email' => $email,
+            'password' => $password,
+            'telp' => $telp,
+            'alamat' => $alamat,
+            'status' => $status
+        ]);
 
-        if($user){
+        // $data = [
+        //     'nama' => $request->input('nama'),
+        //     'email' => $request->input('email'),
+        //     'password' => $request->input('password'),
+        //     'telp' => $request->input('telp'),
+        //     'alamat' => $request->input('alamat'),
+        //     'status' => $request->input('status')
+        // ];
+
+        // $user =  User::create(array_merge($request->all(),[
+        //     'password' => bcrypt($request->password)
+        // ]));
+
+        if($register){
             $result = [
                 'pesan' => 'Registrasi Berhasil',
-                'data' => $data
+                'data' => $register
             ];
         }else{
             $result = [
@@ -122,7 +138,7 @@ class AuthController extends Controller
                     'api_token' => $token
                 ]);
                 return response()->json([
-                    'pesan' => 'login berhasil',
+                    'message' => 'login berhasil',
                     'token' => $token,
                     'data'=> $user
                 ]);
