@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('password');
             $table->string('telp', 14)->unique();
             $table->longText('alamat');
-            $table->string('status');
+            $table->string('jabatan');
             $table->string('image')->nullable();
             $table->string('api_token')->nullable();
             $table->timestamps();

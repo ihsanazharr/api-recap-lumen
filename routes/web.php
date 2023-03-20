@@ -26,7 +26,8 @@ $router->get('login', ['uses' => 'LoginController@index']);
 //     $router->post('login', 'AuthController@login');
 // });
 
-$router->post('register', 'AuthController@register');
+
+
 $router->post('login', 'AuthController@login');
 
 $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($router) {
@@ -39,6 +40,7 @@ $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($ro
     $router->delete('role/{id}', 'RoleController@destroy');
 
     //User
+    $router->post('register', 'AuthController@register');
     $router->get('user', 'UserController@index');
     $router->get('user/{id}', 'UserController@show');
     $router->get('search-user/{nama}', 'UserController@search');

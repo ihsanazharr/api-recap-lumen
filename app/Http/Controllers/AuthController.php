@@ -50,7 +50,7 @@ class AuthController extends Controller
             'password' => 'required| min:8',
             'telp' => 'required| unique:users',
             'alamat' => 'required',
-            'status' => 'required',
+            'jabatan' => 'required',
         ]);
 
         $nama = $request->input('nama');
@@ -58,7 +58,7 @@ class AuthController extends Controller
         $password = Hash::make($request->input('password'));
         $telp = $request->input('telp');
         $alamat = $request->input('alamat');
-        $status = $request->input('status');
+        $jabatan = $request->input('jabatan');
 
         $register = User::create([
             'nama' => $nama,
@@ -66,7 +66,7 @@ class AuthController extends Controller
             'password' => $password,
             'telp' => $telp,
             'alamat' => $alamat,
-            'status' => $status
+            'jabatan' => $jabatan
         ]);
 
         // $data = [
@@ -85,7 +85,6 @@ class AuthController extends Controller
         if($register){
             $result = [
                 'pesan' => 'Registrasi Berhasil',
-                'data' => $register
             ];
         }else{
             $result = [

@@ -24,6 +24,7 @@ class DetailPekerjaanController extends Controller
             'jam_kerja' => 'required',
             'tgl_kerja' => 'required',
             'tipe' => 'required',
+            
         ]);
 
         $data = [
