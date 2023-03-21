@@ -30,6 +30,7 @@ $router->get('login', ['uses' => 'LoginController@index']);
 
 $router->post('login', 'AuthController@login');
 
+
 $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($router) {
 
     //Role
@@ -61,6 +62,7 @@ $router->group( ['prefix' => 'api', 'middleware' => 'auth'] , function() use($ro
     $router->get('detailpk/{id}',  'DetailPekerjaanController@show');
     $router->get('search-detailpk/{namaPekerjaan}',  'DetailPekerjaanController@search');
     $router->post('detailpk',  'DetailPekerjaanController@create');
+    $router->post('upload/detailpk',  'DetailPekerjaanController@upload');
     $router->put('detailpk/{id}',  'DetailPekerjaanController@update');
     $router->delete('detailpk/{id}',  'DetailPekerjaanController@destroy');
     

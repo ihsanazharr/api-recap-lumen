@@ -14,12 +14,9 @@ class PekerjaanController extends Controller
     public function index(Request $request)
     {
         $data = Pekerjaan::all();
-        $user = User::where('email', $request->email)->first();
-        $token = $user->$request('api_token');
         return response()->json([
             'code' => 200,
-            'message' => 'data berhasil ditambah',
-            'token' => $token,
+            'message' => 'Sukses',
             'data'=> $data
         ]);
     }
@@ -28,7 +25,6 @@ class PekerjaanController extends Controller
     public function create(Request $request)
     {
         $this->validate($request, [
-            'id_user' => 'required',
             'bulan' => 'required',
             'start' => 'required',
             'end' => 'required',
@@ -37,7 +33,6 @@ class PekerjaanController extends Controller
         ]);
 
         $data = [
-            'id_user' => $request->input('id_user'),
             'bulan' => $request->input('bulan'),
             'start' => $request->input('start'),
             'end' => $request->input('end'),

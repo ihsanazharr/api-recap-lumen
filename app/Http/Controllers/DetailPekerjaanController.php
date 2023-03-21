@@ -39,16 +39,18 @@ class DetailPekerjaanController extends Controller
         $detailPekerjaan = DetailPekerjaan::create($data);
 
         if($detailPekerjaan){
-            return $this->successAdd($detailPekerjaan);
+            return response()->json([
+                'message' => 'login berhasil',
+                'data'=> $data
+            ]);
         }else{
             return $this->error("Gagal Menambahkan Data");
         }
-
     }
 
     public function store(Request $request)
     {
-        //
+
     }
 
     public function show($id)
@@ -72,6 +74,26 @@ class DetailPekerjaanController extends Controller
         }else{
             return $this->error("Gagal Merubah Data");
         }
+    }
+
+    public function upload(Request $request)
+    {
+        $fileName = "";
+        if($request->image){
+            $image = $request->image->getClientOriginalName();
+            $image = str_replace(' ', '', $image);
+            $image = date('Hs') . rand(1, 999) . "_" . $image;
+            $fileName = $image;
+            $request->image->storeAs('public/product', $image);
+
+            return $this->successAdd($fileName);
+        }else{
+            return $this->error("Image wajib di kirim");
+        }
+
+    	// $oriname = $request->file('gambar')->getClientOriginalName();
+    	// $nama_file = time()."_".$oriname;
+
     }
 
 
