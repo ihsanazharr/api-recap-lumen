@@ -18,7 +18,7 @@ class DetailPekerjaan extends Model
     }
 
     protected $fillable = [
-        'id_pekerjaan', 'nama_pekerjaan', 'desc_pekerjaan','bukti_pekerjaan', 'jam_kerja', 'tgl_kerja', 'tipe'
+        'id_user', 'id_pekerjaan', 'nama_pekerjaan', 'desc_pekerjaan','bukti_pekerjaan', 'jam_kerja', 'tgl_kerja', 'tipe'
     ];
 
 }

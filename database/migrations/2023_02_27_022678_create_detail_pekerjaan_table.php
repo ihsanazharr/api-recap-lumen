@@ -19,10 +19,10 @@ return new class extends Migration
             $table->unsignedBigInteger('id_pekerjaan')->nullable();
             $table->string('nama_pekerjaan');
             $table->string('desc_pekerjaan');
-            $table->string('bukti_pekerjaan');
+            $table->string('bukti_pekerjaan')->nullable();
             $table->integer('jam_kerja');
             $table->date('tgl_kerja');
-            $table->enum('tipe',['Progress Weekday', 'Lembur Weekday', 'Lembur Weekend']);
+            $table->enum('tipe',['Progress Weekday', 'Lembur Weekday', 'Lembur Weekend'])->default('Progress Weekday');
             $table->timestamps();
             $table->foreign('id_user')->references('id')->on('users');
             $table->foreign('id_pekerjaan')->references('id')->on('pekerjaan');

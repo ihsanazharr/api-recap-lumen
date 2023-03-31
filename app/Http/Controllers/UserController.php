@@ -2,18 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Models\DetailPekerjaan;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $data = User::all();
-        return response()->json($data);
+        return response()->json([
+            'code' => 200,
+            'message' => 'Berhasil mengakses',
+            'jumlah_karyawan' => User::count(),
+            'data' => User::all()
+        ]);
     }
 
+    public function getTodayTask($id)
+    {   
+        $data = User::select('users.*')
+            ->where('id', $id)
+            ->from('users')
+            ->first();
+        
+        $detail = DetailPekerjaan::select('users.id', 'users.nama', 'pekerjaan.bulan', 'detail_pekerjaan.*')
+            ->join('users', 'users.id', '=', 'detail_pekerjaan.id_user')
+            ->join('pekerjaan', 'pekerjaan.id', '=', 'detail_pekerjaan.id_pekerjaan')
+            ->where('detail_pekerjaan.id_user', $data->id)
+            ->where('tgl_kerja', '>=', Carbon::today())
+            ->groupBy('detail_pekerjaan.id_user')
+            ->first();
+ 
+        if ($detail == null) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data task hari ini',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $detail
+            ]);
+        }
+    }
+
+    public function getCurrentMonth($id)
+    {   
+        $data = User::select('users.*')
+            ->where('id', $id)
+            ->from('users')
+            ->first();
+        
+        $detail = DetailPekerjaan::select('users.id', 'users.nama', 'pekerjaan.bulan',
+        DB::raw('sum(detail_pekerjaan.jam_kerja) as jam_kerja'))
+            ->join('users', 'users.id', '=', 'detail_pekerjaan.id_user')
+            ->join('pekerjaan', 'pekerjaan.id', '=', 'detail_pekerjaan.id_pekerjaan')
+            ->where('detail_pekerjaan.id_user', $data->id)
+            ->where('bulan', $this->convertMonth(date('n')))
+            ->groupBy('detail_pekerjaan.id_user')
+            ->first();
+ 
+        if ($detail == null) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data.',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $detail
+            ]);
+        }
+    }
 
     public function create()
     {
@@ -83,12 +148,18 @@ class UserController extends Controller
             'password' => 'min:8',
             'telp' => 'unique:users'
         ]);
+        
         $user = User::where('id', $id)->update(array_merge($request->all(),[
             'password' => Hash::make($request->input('password'))
         ]));
 
+
         if($user){
-            return $this->successEdit("Data berhasil diubah");
+            return response()->json([
+                'code' => 200,
+                'message' => 'Data Berhasil Diubah',
+                'data' => $user
+            ]);
         }else{
             return $this->error('Gagal merubah data');
         }
@@ -129,5 +200,26 @@ class UserController extends Controller
             'message' => $message
         ], 400);
 
+    }
+
+    private function convertMonth($value)
+    {
+        $bulan = array (
+            'Januari',
+			'Februari',
+			'Maret',
+			'April',
+			'Mei',
+			'Juni',
+			'Juli',
+			'Agustus',
+			'September',
+			'Oktober',
+			'November',
+			'Desember'
+		);
+
+        $convert = $bulan[$value-1];
+        return $convert;
     }
 }

@@ -3,24 +3,85 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
-use App\Models\Pekerjaan;
 use App\Models\User;
+use App\Models\Pekerjaan;
 use Illuminate\Http\Request;
+use App\Models\PersonalToken;
+use App\Models\DetailPekerjaan;
+use Illuminate\Support\Facades\DB;
 
 class PekerjaanController extends Controller
 {
 
     
-    public function index(Request $request)
+    public function index()
     {
-        $data = Pekerjaan::all();
-        return response()->json([
-            'code' => 200,
-            'message' => 'Sukses',
-            'data'=> $data
-        ]);
+        $data = Pekerjaan::select('pekerjaan.*')
+            ->from('pekerjaan')
+            ->get();
+ 
+        if ($data->isEmpty()) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data pekerjaan saat ini',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $data
+            ]);
+        }
     }
 
+    public function byMonth(Request $request)
+    {
+        $month = $request->month?$request->month:date('n');
+        $data = Pekerjaan::select('pekerjaan.*')
+            ->from('pekerjaan')
+            ->where('bulan', $this->convertMonth($month))
+            ->first();
+ 
+        if ($data == null) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data pekerjaan saat ini',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $data
+            ]);
+        }
+    }
+
+    public function detail($id)
+    {
+        $data = Pekerjaan::select('pekerjaan.*')
+            ->where('id', $id)
+            ->from('pekerjaan')
+            ->first();
+        
+        $detail = DetailPekerjaan::select('users.id', 'users.nama', 'users.jabatan', DB::raw('sum(detail_pekerjaan.jam_kerja) as jam_kerja'))
+            ->join('users', 'users.id', '=', 'detail_pekerjaan.id_user')
+            ->where('id_pekerjaan', $data->id)
+            ->groupBy('id_user')
+            ->get();
+ 
+        if ($detail->isEmpty()) {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Tidak ada data pekerjaan saat ini',
+            ]);
+        } else {
+            return response()->json([
+                'code' => 200,
+                'message' => 'Berhasil mengakses.',
+                'data' => $detail
+            ]);
+        }
+    }
 
     public function create(Request $request)
     {
@@ -28,8 +89,8 @@ class PekerjaanController extends Controller
             'bulan' => 'required',
             'start' => 'required',
             'end' => 'required',
-            'jam_toleransi' => 'required| numeric',
-            'total_jam' => 'required| numeric'
+            'jam_toleransi' => 'required',
+            'total_jam' => 'required'
         ]);
 
         $data = [
@@ -42,7 +103,7 @@ class PekerjaanController extends Controller
 
         $pekerjaan = Pekerjaan::create($data);
         if($pekerjaan){
-            $token = User::where('api_token', $request->api_token);
+            $token = PersonalToken::where('id_user', 1)->first()->token;
             return response()->json([
                 'code' => 200,
                 'message' => 'data berhasil ditambah',
@@ -113,6 +174,7 @@ class PekerjaanController extends Controller
     public function successShow($data){
         return response()->json([
             'code' => 200,
+            'message' => 'Berhasil',
             'data' => $data
         ]);
     }
@@ -133,5 +195,26 @@ class PekerjaanController extends Controller
             'message' => $message
         ], 400);
 
+    }
+
+    private function convertMonth($value)
+    {
+        $bulan = array (
+            'Januari',
+			'Februari',
+			'Maret',
+			'April',
+			'Mei',
+			'Juni',
+			'Juli',
+			'Agustus',
+			'September',
+			'Oktober',
+			'November',
+			'Desember'
+		);
+
+        $convert = $bulan[$value-1];
+        return $convert;
     }
 }

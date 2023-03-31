@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('pekerjaan', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_user')->default('1');
-            $table->enum('bulan', ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember']);
-            $table->dateTime('start');
-            $table->dateTime('end');
+            $table->unsignedBigInteger('id_user')->default(1);
+            $table->string('bulan');
+            $table->date('start');
+            $table->date('end');
             $table->integer('jam_toleransi');
             $table->integer('total_jam');
             $table->timestamps();

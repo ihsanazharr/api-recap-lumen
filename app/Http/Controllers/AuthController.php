@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PersonalToken;
 use App\Models\User;
 
 use Firebase\JWT\JWT;
@@ -13,37 +14,8 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    // protected function jwt(User $user) {                               
-    //     $payload = [                                   
-    //     'iss' => "bearer", // Issuer of the token                                   
-    //     'sub' => $user->id, // Subject of the token                                   
-    //     'iat' => time(), // Time when JWT was issued.                                    
-    //     'exp' => time() + 60*60 // Expiration time
-
-    //     return JWT::encode($payload, env('JWT_SECRET'));
-    //     ]};
-
     public function register(Request $request)
     {
-        // $validated = $this->validate($request, [
-        //     'nama' => 'required| unique:users',
-        //     'email' => 'required| unique:users',
-        //     'password' => 'required| min:8',
-        //     'telp' => 'required| unique:users',
-        //     'alamat' => 'required',
-        //     'status' => 'required',
-        // ]);
-
-        // $user = new User();
-        // $user->nama = $validated['nama'];
-        // $user->email = $validated['email'];
-        // $user->password = Hash::make($validated['password']);
-        // $user->telp = $validated['telp'];
-        // $user->alamat = $validated['alamat'];
-        // $user->status = $validated['status'];
-        // $user->save();
-        // return response()->json($user, 201);
-
         $this->validate($request, [
             'nama' => 'required| unique:users',
             'email' => 'required| unique:users',
@@ -60,7 +32,7 @@ class AuthController extends Controller
         $alamat = $request->input('alamat');
         $jabatan = $request->input('jabatan');
 
-        $register = User::create([
+        $user = User::create([
             'nama' => $nama,
             'email' => $email,
             'password' => $password,
@@ -69,27 +41,17 @@ class AuthController extends Controller
             'jabatan' => $jabatan
         ]);
 
-        // $data = [
-        //     'nama' => $request->input('nama'),
-        //     'email' => $request->input('email'),
-        //     'password' => $request->input('password'),
-        //     'telp' => $request->input('telp'),
-        //     'alamat' => $request->input('alamat'),
-        //     'status' => $request->input('status')
-        // ];
 
-        // $user =  User::create(array_merge($request->all(),[
-        //     'password' => bcrypt($request->password)
-        // ]));
-
-        if($register){
+        if($user){
             $result = [
-                'pesan' => 'Registrasi Berhasil',
+                'code' => 200,
+                'message' => 'Registrasi berhasil',
+                'data' => $user
             ];
         }else{
             $result = [
-                'pesan' => 'Registrasi Gagal',
-                'data' => ''
+                'code' => 400,
+                'message' => 'User gagal ditambahkan',
             ];
         }
 
@@ -99,26 +61,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // $validated = $this->validate($request,[
-        //     'email' => 'required| exists:users',
-        //     'password' => 'required| min:8'
-        // ]);
-
-        // $user = User::where('email', $validated['email'])->first();
-        // if (!Hash::check($validated['password'], $user->password)){
-        //     return abort(401, "Email atau Password anda salah");
-        // }
-        // $payload = [
-        //     'iat' => intval(microtime(true)),
-        //     'exp' => intval(microtime(true)) + (60 * 60 * 1000),
-        //     'uid' => $user->id
-        // ];
-        // $token = JWT::encode($payload, env('JWT_SECRET'));
-        // return response()->json(['api_token' => $token]);
-
-
-        $email = $request->input('email');
-        $password = $request->input('password');
 
         $validasi = Validator::make($request->all(),[
             'email' => 'required',
@@ -131,16 +73,29 @@ class AuthController extends Controller
 
         $user = User::where('email', $request->email)->first();
         if($user){
+            
             if(password_verify($request->password, $user->password)){
-                $token = Str::random(40);
-                $user->update([
-                    'api_token' => $token
-                ]);
-                return response()->json([
-                    'message' => 'login berhasil',
-                    'token' => $token,
-                    'data'=> $user
-                ]);
+                $generateToken = Str::random(32);
+
+                $exist = PersonalToken::where('id_user', $user->id)->first();
+
+                if ($exist == null) {
+                    $token = PersonalToken::create([
+                        'token' => $generateToken,
+                        'id_user' => $user->id
+                    ]);            
+                } else {
+                    $token = PersonalToken::where('id_user', $user->id)->first();
+                    $token->token = $generateToken;
+                    $token->save();
+                }
+
+                $user->token = $token->token;
+                $user->jumlah_karyawan = User::count();
+
+                // PersonalToken::where('token', $token->token)->first()->delete();
+
+                return $this->success($user);
             }
             else{
                 return $this->error("Password anda salah");

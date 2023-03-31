@@ -23,7 +23,6 @@ return new class extends Migration
             $table->longText('alamat');
             $table->string('jabatan');
             $table->string('image')->nullable();
-            $table->string('api_token')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

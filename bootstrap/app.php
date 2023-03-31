@@ -86,9 +86,9 @@ $app->configure('app');
 
 $app->routeMiddleware([
     'auth' => App\Http\Middleware\Authenticate::class,
-    'user' => App\Http\Middleware\UserMiddleware::class,
+    'user' => App\Http\Middleware\AuthUser::class,
+    'admin' => App\Http\Middleware\AuthAdmin::class
 ]);
-
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
